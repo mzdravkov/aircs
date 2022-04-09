@@ -46,4 +46,5 @@ public class Home
     public int Beds { get; set; }
     [Range(0, Int32.MaxValue)]
     public int Baths { get; set; }
+    public virtual ICollection<Picture> Pictures { get; set; }
 }

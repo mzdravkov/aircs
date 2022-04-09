@@ -5,99 +5,185 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+
+<style>
+
+.close {
+  font-size: 1.5rem;
+}
+
+.col-12 img {
+  opacity: 0.7;
+  cursor: pointer;
+  margin: 2rem;
+  width: 100%;
+}
+
+.col-12 img:hover {
+  opacity: 1;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.modal-content {
+  background-color: black;
+}
+
+.modal-content button {
+  background-color: black;
+  border: none;
+  color:  white;
+}
+
+.modal-content img {
+    width: auto !important;
+    max-width: 100%;
+    max-height: 88vh;
+    margin: auto;
+}
+
+.modal-content {
+    max-height: 100vh;
+}
+</style>
 
 <div>
-    <h4>Home</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Country)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Country)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Area)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Area)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.City)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Street)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Street)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Number)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Number)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Apartment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Apartment)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CheckInInstructions)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CheckInInstructions)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GuestLimit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GuestLimit)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Bedrooms)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Bedrooms)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Beds)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Beds)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Baths)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Baths)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-8">
+            <h2>@Html.DisplayFor(i => Model.Name)</h2>
+        </div>
+        <div class="col-4">
+            <h6>
+                @Html.ActionLink(
+                    "Remove",
+                    "Delete",
+                    "Homes",
+                    new {id = @Model.Id},
+                    new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
+                @Html.ActionLink(
+                    "Edit",
+                    "Edit",
+                    "Homes",
+                    new {id = @Model.Id},
+                    new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
+                @Html.ActionLink(
+                    "Add pictures",
+                    "AddPictures",
+                    "Homes",
+                    new {id = @Model.Id},
+                    new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
+            </h6>
+        </div>
+    </div>
+    <h6>
+        @Html.DisplayFor(modelItem => Model.City),
+        @Html.DisplayFor(modelItem => Model.Area),
+        @Html.DisplayFor(modelItem => Model.Country)
+    </h6>
+    <h6>★ TODO</h6>
+    
+    
+    <div class="container" style="padding-right: 60px">
+        <div class="row d-flex flex-wrap align-items-center" data-bs-toggle="modal" data-bs-target="#lightbox">
+            @{ int i = 0; }
+            @foreach (var picture in Model.Pictures)
+            {
+                <div class="col-12 col-md-6 col-lg-3">
+                    <img src="@picture.Filepath" data-bs-target="#indicators" data-bs-slide-to="@i"/>
+                </div>
+                i++;
+            }
+        </div>
+    
+        <!-- Modal -->
+        <div class="modal fade" id="lightbox" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen" role="document">
+                <div class="modal-content">
+                    <button type="button" class="close text-right p-2" data-bs-dismiss="modal" aria-label="Close" style="text-align: right">
+                        <span aria-hidden="true" style="margin-right: 30px">&times;</span>
+                    </button>
+                    <div id="indicators" class="carousel slide" data-bs-interval="false" style="height: 90%">
+                        <ol class="carousel-indicators">
+                            @{ int j = 0; }
+                            @foreach (var picture in Model.Pictures)
+                            {
+                                @if (j == 0)
+                                {
+                                    <li data-bs-target="#indicators" data-bs-slide-to="@j" class="active"></li>
+                                }
+                                else
+                                {
+                                    <li data-bs-target="#indicators" data-bs-slide-to="@j"></li>
+                                }
+                                j++;
+                            }
+                        </ol>
+                        <div class="carousel-inner">
+                            @{ int k = 0; }
+                            @foreach (var picture in Model.Pictures)
+                            {
+                                @if (k++ == 0)
+                                {
+                                    <div class="carousel-item active">
+                                        <img class="d-block w-100" src="@picture.Filepath"></img>
+                                        <form asp-action="DeletePicture" class="mt-2" style="text-align: center">
+                                            <input type="hidden" name="id" value="@picture.Id"/>
+                                            <button type="submit" onclick="confirm('Are you sure you want to delete this picture?')">🗑 Delete</button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="carousel-item">
+                                        <img class="d-block w-100" src="@picture.Filepath"></img>
+                                        <form asp-action="DeletePicture" class="mt-2" style="text-align: center">
+                                            <input type="hidden" name="id" value="@picture.Id"/>
+                                            <button type="submit" onclick="confirm('Are you sure you want to delete this picture?')">🗑 Delete</button>
+                                        </form>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <a class="carousel-control-prev" href="#indicators" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#indicators" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+    
+    
+    
+    <div class="row" style="margin-bottom: 30px; margin-top: 20px">
+        <div class="col-md-3">Guests: @Model.GuestLimit</div>
+        <div class="col-md-3">Type: @Model.Type</div>
+        <div class="col-md-3">Beds: @Model.Beds</div>
+        <div class="col-md-3">Baths: @Model.Baths</div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-6" style="padding-right: 30px">
+            <h4>Description</h4>    
+            <p>@Html.DisplayFor(modelItem => Model.Description)</p>
+            <hr/>
+            <h4>Amenities</h4>    
+            <hr/>
+            <h4>Reviews</h4>    
+            <hr/>
+            <h4>Hosted by</h4>    
+            <p>@Html.DisplayFor(modelItem => Model.Owner.UserName)</p>
+        </div> 
+        <div class="col-6" style="padding-left: 30px">
+            
+        </div> 
+    </div>
 </div>

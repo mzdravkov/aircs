@@ -76,3 +76,5 @@ _[Ss]cripts
 
 *.un~
 *.swp
+wwwroot/images/*.jpg
+wwwroot/images/*.png

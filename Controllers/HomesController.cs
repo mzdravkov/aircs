@@ -3,6 +3,7 @@ using airbnb.Data;
 using airbnb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using Vereyon.Web;
 
 namespace airbnb.Controllers
@@ -43,12 +44,13 @@ namespace airbnb.Controllers
             }
 
             var home = await _context.Home
+                .Include(h => h.Pictures)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (home == null)
             {
                 return NotFound();
             }
-
+            
             return View(home);
         }
 
@@ -211,6 +213,77 @@ namespace airbnb.Controllers
             }
 
             return true;
+        }
+
+        public async Task<IActionResult> AddPictures(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var home = await _context.Home
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (home == null)
+            {
+                return NotFound();
+            }
+
+            return View(home);
+        }
+        
+        [HttpPost, ActionName("UploadPicture")]
+        public async Task<IActionResult> UploadPicture(int id, IFormFile file)
+        {
+            var home = await _context.Home
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (home == null)
+            {
+                return NotFound();
+            }
+            
+            if (file != null && file.Length > 0)
+            {                
+                // TODO: get unique name for the file
+                var fileName = $@"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                var fileRelativePath = Path.Combine("images", fileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileRelativePath);
+                using (var fileSrteam = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileSrteam);
+                }
+
+                Picture picture = new Picture {Home = home, Filepath = "/" + fileRelativePath};
+                _context.Add(picture);
+                _context.SaveChanges();
+                _flashMessage.Confirmation("Picture added to the home!");
+                return RedirectToAction(nameof(AddPictures), new { id });
+            }
+            _flashMessage.Danger("We couldn't add the picture to the home!");
+            return RedirectToAction(nameof(AddPictures), new { id });   
+        }
+
+        [HttpPost, ActionName("DeletePicture")]
+        public async Task<IActionResult> DeletePicture(int id)
+        {
+            var picture = await _context.Picture
+                .Include(m => m.Home)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (picture == null)
+            {
+                return NotFound();
+            }
+            
+            Console.WriteLine(picture);
+
+            Home home = picture.Home;
+            
+            Console.WriteLine(home);
+            _context.Remove(picture);
+            _context.SaveChanges();
+            
+            _flashMessage.Confirmation("Picture deleted!");
+            return RedirectToAction(nameof(Details), new { home.Id });
         }
     }
 }

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/airbnb.styles.css" asp-append-version="true"/>
 </head>
-<body>
+<body style="background-color: #f3f4f6">
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
@@ -31,17 +31,18 @@
         </div>
     </nav>
 </header>
-<div class="container">
+<div id="flash-notifications" class="mx-auto" style="margin-left: 80px; margin-right: 80px; max-width: 1320px;">
+    @addTagHelper *, Vereyon.Web.FlashMessage 
+    <flash dismissable="true"/>
+</div>
+<div class="container shadow-lg p-3 mb-5 rounded" style="background-color: white; margin-top: 50px;">
     <main role="main" class="pb-3">
-        <div>
-            @addTagHelper *, Vereyon.Web.FlashMessage 
-            <flash dismissable="true"/>
-        </div>
         @RenderBody()
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
+<hr/>
+<footer class="border-top footer text-muted" style="margin-top: 60px">
     <div class="container">
         &copy; 2022 - airbnb - <a asp-area="" asp-controller="Index" asp-action="Privacy">Privacy</a>
     </div>
