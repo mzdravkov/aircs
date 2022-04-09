@@ -4,11 +4,11 @@ using airbnb.Models;
 
 namespace airbnb.Controllers;
 
-public class HomeController : Controller
+public class IndexController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<IndexController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public IndexController(ILogger<IndexController> logger)
     {
         _logger = logger;
     }

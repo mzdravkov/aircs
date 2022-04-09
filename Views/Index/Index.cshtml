@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+           <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+               <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-6 py-6">
+                   <form method="GET" action="" class="mt-4">
+   
+                       <div class="flex flex-row gap-4">
+                           <div class="basis-1/5">
+                               <label for="location" value="" />
+                               <input id="location" class="block mt-1" type="text" name="location" required autofocus />
+                           </div>
+                           <div class="basis-2/5">
+                               <div id="date-range-picker" date-rangepicker datepicker-format="yyyy-mm-dd" class="flex items-center mt-1">
+                                   <div class="relative">
+                                       <label for="check_in" value="" />
+                                       <input name="check_in" type="text" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Select date">
+                                   </div>
+                                   <div class="relative ml-2">
+                                       <label for="check_out" value="" />
+                                       <input name="check_out" type="text" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Select date">
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="basis-1/5">
+                               <label for="guests" value="" />
+                               <input id="guests" class="block mt-1" type="number" min="1" name="guests" />
+                           </div>
+                           <div class="basis-1/5 pt-7">
+                                <div class="form-group">
+                                    <input type="submit" value="Find home" class="btn btn-primary" />
+                                </div>
+                           </div>
+                       </div>
+   
+                   </form>
+               </div>
+           </div>
+</div>
