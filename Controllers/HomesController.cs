@@ -3,7 +3,6 @@ using airbnb.Data;
 using airbnb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Net.Http.Headers;
 using Vereyon.Web;
 
 namespace airbnb.Controllers
@@ -22,7 +21,7 @@ namespace airbnb.Controllers
         // GET: Home
         public async Task<IActionResult> Index(string location)
         {
-            var homes = from h in _context.Home select h;
+            var homes = from h in _context.Home.Include(h => h.Pictures) select h;
             if (!String.IsNullOrEmpty(location))
             {
                 homes = homes.Where(
@@ -45,6 +44,7 @@ namespace airbnb.Controllers
 
             var home = await _context.Home
                 .Include(h => h.Pictures)
+                .Include(h => h.Bookings)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (home == null)
             {
@@ -228,6 +228,12 @@ namespace airbnb.Controllers
             {
                 return NotFound();
             }
+            
+            if (!CanEditHome(home))
+            {
+                _flashMessage.Danger("You cannot edit this home!");
+                return RedirectToAction("Index");
+            }
 
             return View(home);
         }
@@ -240,6 +246,11 @@ namespace airbnb.Controllers
             if (home == null)
             {
                 return NotFound();
+            }
+            
+            if (!CanEditHome(home))
+            {
+                return Unauthorized();
             }
             
             if (file != null && file.Length > 0)
@@ -277,6 +288,11 @@ namespace airbnb.Controllers
             Console.WriteLine(picture);
 
             Home home = picture.Home;
+
+            if (!CanEditHome(home))
+            {
+                return Unauthorized();
+            }
             
             Console.WriteLine(home);
             _context.Remove(picture);
@@ -284,6 +300,15 @@ namespace airbnb.Controllers
             
             _flashMessage.Confirmation("Picture deleted!");
             return RedirectToAction(nameof(Details), new { home.Id });
+        }
+
+        public async Task<IActionResult> UserHomes()
+        {
+            User user = _context.Users
+                .Include(u => u.Homes)
+                .ThenInclude(h => h.Pictures)
+                .FirstOrDefault(u => u.UserName == User.Identity.Name);
+            return View(nameof(Index), user.Homes.ToList());
         }
     }
 }

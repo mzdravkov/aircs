@@ -94,7 +94,7 @@
             }
         </div>
     
-        <!-- Modal -->
+        <!-- Picture Gallery -->
         <div class="modal fade" id="lightbox" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen" role="document">
                 <div class="modal-content">
@@ -156,11 +156,6 @@
             </div>
         </div>
     </div>
-
-
-    
-
-    
     
     
     <div class="row" style="margin-bottom: 30px; margin-top: 20px">
@@ -182,8 +177,51 @@
             <h4>Hosted by</h4>    
             <p>@Html.DisplayFor(modelItem => Model.Owner.UserName)</p>
         </div> 
+        
         <div class="col-6" style="padding-left: 30px">
             
+            <form asp-action="Create" asp-controller="Bookings" method="GET">
+                <input name="homeId" type="hidden" value="@Model.Id"/>
+                <div class="form-group">
+                    <label name="dateRange" class="control-label">Period</label>
+                    <input id="daterange" name="dateRange" type="text" class="form-control">
+                </div>
+                <div class="form-group mt-4">
+                    <label name="guests" class="control-label">Guests</label>
+                    <input name="guests" type="number" min="1" class="form-control"/>
+                </div>
+                <div style="float: right">
+                    <button class="mt-4 btn btn-primary" type="submit">Reserve</button>
+                </div>
+            </form>
         </div> 
     </div>
 </div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            var bookings = @Html.Raw(Json.Serialize(Model.Bookings));
+            console.log(bookings);
+            $('#daterange').daterangepicker({
+              "autoApply": true,
+              "isInvalidDate": function(date) {
+                  for (const booking of bookings) {
+                      if (booking.status === 'accepted') {
+                          var checkIn = new Date(booking.checkIn);
+                          var checkOut = new Date(booking.checkOut);
+                          
+                          if (date._d > checkIn && date._d < checkOut) {
+                              return true;
+                          }
+                      
+                      }
+                  }
+                  return false;
+              }
+            });
+        });
+    </script>
+}

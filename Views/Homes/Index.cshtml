@@ -5,16 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 @foreach (var home in Model) {
     <div class="card mb-3">
       <div class="row g-0">
         <div class="col-md-4">
-          <img src="..." class="img-fluid rounded-start" alt="...">
+          <img src="@home.Pictures.First().Filepath" class="img-fluid rounded-start">
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -33,7 +28,7 @@
               <div class="col-md-3">Beds: @home.Beds</div>
               <div class="col-md-3">Baths: @home.Baths</div>
             </div>
-            <p class="card-text" style="overflow:hidden; height: 150px;">@Html.DisplayFor(modelItem => home.Description)</p>
+            <p class="card-text" style="overflow:hidden; height: 125px;">@Html.DisplayFor(modelItem => home.Description)</p>
           </div>
         </div>
       </div>
