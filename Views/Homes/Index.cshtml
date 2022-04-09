@@ -7,115 +7,35 @@
 
 <h1>Index</h1>
 
-<form asp-controller="Homes" asp-action="Index">
-    <p>
-        Title: <input type="text" name="location" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
-
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Area)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Street)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apartment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CheckInInstructions)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GuestLimit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bedrooms)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Beds)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Baths)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Area)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Street)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CheckInInstructions)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GuestLimit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bedrooms)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Beds)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Baths)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@foreach (var home in Model) {
+    <div class="card mb-3">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img src="..." class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h4 class="card-title">
+              @Html.ActionLink(@home.Name, "Details", "Homes", new { id = @home.Id })
+            </h4>
+            <h6>
+              @Html.DisplayFor(modelItem => home.City),
+              @Html.DisplayFor(modelItem => home.Area),
+              @Html.DisplayFor(modelItem => home.Country)
+            </h6>
+            <h6>★ TODO</h6>
+            <div class="row" style="margin-bottom: 30px; margin-top: 20px">
+              <div class="col-md-3">Guests: @home.GuestLimit</div>
+              <div class="col-md-3">Type: @home.Type</div>
+              <div class="col-md-3">Beds: @home.Beds</div>
+              <div class="col-md-3">Baths: @home.Baths</div>
+            </div>
+            <p class="card-text" style="overflow:hidden; height: 150px;">@Html.DisplayFor(modelItem => home.Description)</p>
+          </div>
+        </div>
+      </div>
+    </div>
 }
-    </tbody>
-</table>

@@ -25,10 +25,10 @@ namespace airbnb.Controllers
             if (!String.IsNullOrEmpty(location))
             {
                 homes = homes.Where(
-                    home => home.Country!.Contains(location)
-                            || home.Area!.Contains(location)
-                            || home.City!.Contains(location)
-                            || home.Street!.Contains(location));
+                    home => home.Country!.ToLower().Contains(location.ToLower())
+                            || home.Area!.ToLower().Contains(location.ToLower())
+                            || home.City!.ToLower().Contains(location.ToLower())
+                            || home.Street!.ToLower().Contains(location.ToLower()));
             }
 
             return View(await homes.ToListAsync());
