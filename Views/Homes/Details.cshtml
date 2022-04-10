@@ -185,7 +185,7 @@
                 <div class="col-6">
                     @foreach (var amenity in Model.HomeAmenities.Take((Model.HomeAmenities.Count + 1)/2))
                     {
-                        <span class="badge rounded-pill bg-primary">
+                        <span class="mx-1 badge rounded-pill mt-3" style="background-color: #e5e7eb; color: #7a808d; font-size: 11pt; font-weight: 400">
                             @amenity.Amenity.Name
                         </span>
                         <br/>
@@ -194,7 +194,7 @@
                 <div class="col-6">
                     @foreach (var amenity in Model.HomeAmenities.Skip((Model.HomeAmenities.Count + 1)/2))
                     {
-                        <span class="badge rounded-pill bg-primary">
+                        <span class="mx-1 badge rounded-pill mt-3" style="background-color: #e5e7eb; color: #7a808d; font-size: 11pt; font-weight: 400">
                             @amenity.Amenity.Name
                         </span>
                         <br/>
