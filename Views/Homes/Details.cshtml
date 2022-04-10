@@ -170,7 +170,37 @@
             <h4>Description</h4>    
             <p>@Html.DisplayFor(modelItem => Model.Description)</p>
             <hr/>
-            <h4>Amenities</h4>    
+            <div class="row">
+                <div class="col-6">
+                    <h4>Amenities</h4>    
+                </div>
+                <div class="col-6">
+                    @if (User.Identity.IsAuthenticated && User.Identity.Name == Model.Owner.UserName)
+                    {
+                        @Html.ActionLink("Edit amenities", "EditAmenities", "Homes", new { Model.Id }, new { @style = "float: right" })
+                    }
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6">
+                    @foreach (var amenity in Model.HomeAmenities.Take((Model.HomeAmenities.Count + 1)/2))
+                    {
+                        <span class="badge rounded-pill bg-primary">
+                            @amenity.Amenity.Name
+                        </span>
+                        <br/>
+                    }
+                </div>
+                <div class="col-6">
+                    @foreach (var amenity in Model.HomeAmenities.Skip((Model.HomeAmenities.Count + 1)/2))
+                    {
+                        <span class="badge rounded-pill bg-primary">
+                            @amenity.Amenity.Name
+                        </span>
+                        <br/>
+                    }
+                </div>
+            </div>
             <hr/>
             <h4>Reviews</h4>    
             <hr/>

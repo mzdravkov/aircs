@@ -1,4 +1,5 @@
 #nullable disable
+using System.Collections.Specialized;
 using airbnb.Data;
 using airbnb.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -66,8 +67,11 @@ namespace airbnb.Controllers
             }
 
             var home = await _context.Home
+                .Include(h => h.Owner)
                 .Include(h => h.Pictures)
                 .Include(h => h.Bookings)
+                .Include(h => h.HomeAmenities)
+                .ThenInclude(homeAmenity => homeAmenity.Amenity)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (home == null)
             {
@@ -329,6 +333,69 @@ namespace airbnb.Controllers
                 .ThenInclude(h => h.Pictures)
                 .FirstOrDefault(u => u.UserName == User.Identity.Name);
             return View(nameof(Index), user.Homes.ToList());
+        }
+
+        public async Task<IActionResult> EditAmenities(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var home = await _context.Home
+                .Include(h => h.HomeAmenities)
+                .FirstOrDefaultAsync(h => h.Id == id);
+            if (home == null)
+            {
+                return NotFound();
+            }
+            
+            if (!CanEditHome(home))
+            {
+                _flashMessage.Danger("You cannot edit this home");
+                return RedirectToAction("Index");
+            }
+
+            var amenities = from a in _context.Amenities select a;
+
+            var homeAndAmenitiesViewModel = new HomeAndAmenitiesViewModel
+            {
+                Home = home,
+                Amenities = amenities.ToList()
+            };
+
+            return View(homeAndAmenitiesViewModel);
+        }
+
+        public async Task<IActionResult> SaveAmenities(int? homeId)
+        {
+            if (homeId == null)
+            {
+                return NotFound();
+            }
+
+            var home = await _context.Home
+                .Include(h => h.HomeAmenities)
+                .FirstOrDefaultAsync(h => h.Id == homeId);
+            if (home == null)
+            {
+                return NotFound();
+            }
+            
+            var homeAmenities = _context.Amenities
+                .ToList()
+                .Where(a => Request.Form.ContainsKey(a.Id.ToString()))
+                .Select(
+                    a => new HomeAmenity {Home = home, Amenity = a}
+                )
+                .ToList();
+            
+            home.HomeAmenities.Clear();
+            home.HomeAmenities = homeAmenities;
+            _context.SaveChanges();
+
+            _flashMessage.Confirmation("The amenities have been updated.");
+            return RedirectToAction(nameof(Details), new { id = homeId });   
         }
     }
 }

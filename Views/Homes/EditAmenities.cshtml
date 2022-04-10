@@ -1,0 +1,34 @@
+@model airbnb.Models.HomeAndAmenitiesViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Tell us what amenities your home has</h3>
+
+<form asp-action="SaveAmenities" class="mt-4">
+    <input name="homeId" type="hidden" value="@Model.Home.Id"/>
+    @foreach (var amenity in Model.Amenities)
+    {
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" name="@amenity.Id" id="@amenity.Id">
+            <label class="form-check-label" for="@amenity.Id">
+                @amenity.Name
+            </label>
+        </div>
+    }
+    <button type="submit" class="mt-4 btn btn-primary">Save</button>
+</form>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            let homeAmenities = @Html.Raw(Json.Serialize(Model.Home.HomeAmenities.Select(ha => ha.Amenity.Id)));
+            for (var id of homeAmenities) {
+                $(`input#${id}`).prop('checked', true);
+            }
+        });
+    </script>
+}

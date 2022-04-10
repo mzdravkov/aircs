@@ -48,4 +48,5 @@ public class Home
     public int Baths { get; set; }
     public virtual ICollection<Picture> Pictures { get; set; }
     public virtual ICollection<Booking> Bookings { get; set; }
+    public virtual ICollection<HomeAmenity> HomeAmenities { get; set; }
 }
