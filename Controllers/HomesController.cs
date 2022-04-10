@@ -19,9 +19,14 @@ namespace airbnb.Controllers
         }
 
         // GET: Home
-        public async Task<IActionResult> Index(string location)
+        public async Task<IActionResult> Index(string location, string period, int guests)
         {
-            var homes = from h in _context.Home.Include(h => h.Pictures) select h;
+            var homes = from h in _context.Home
+                .Include(h => h.Pictures)
+                .Include(h => h.Bookings)
+                select h;
+            
+            // Filter by location if provided
             if (!String.IsNullOrEmpty(location))
             {
                 homes = homes.Where(
@@ -29,6 +34,24 @@ namespace airbnb.Controllers
                             || home.Area!.ToLower().Contains(location.ToLower())
                             || home.City!.ToLower().Contains(location.ToLower())
                             || home.Street!.ToLower().Contains(location.ToLower()));
+            }
+
+            // Filter by period if provided
+            if (!String.IsNullOrEmpty(period))
+            {
+                string[] dates = period.Split(" - ");
+                DateTime checkIn = DateTime.Parse(dates[0]);
+                DateTime checkOut = DateTime.Parse(dates[1]);
+                homes = homes.Where(
+                    home => !home.Bookings.Select(
+                        b => b.Status == "accepted" && b.OverlapsWithInterval(checkIn, checkOut)).Any()
+                );
+            }
+
+            // Filter by guest number if provided
+            if (guests > 0)
+            {
+                homes = homes.Where(h => h.GuestLimit >= guests);
             }
 
             return View(await homes.ToListAsync());
@@ -285,8 +308,6 @@ namespace airbnb.Controllers
                 return NotFound();
             }
             
-            Console.WriteLine(picture);
-
             Home home = picture.Home;
 
             if (!CanEditHome(home))
@@ -294,7 +315,6 @@ namespace airbnb.Controllers
                 return Unauthorized();
             }
             
-            Console.WriteLine(home);
             _context.Remove(picture);
             _context.SaveChanges();
             

@@ -1,0 +1,76 @@
+@model IEnumerable<airbnb.Models.Booking>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (var booking in Model) {
+  <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="@booking.Home.Pictures.First().Filepath" class="img-fluid rounded-start">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body" style="padding-bottom: 0px">
+          <h4 class="card-title">
+            <div class="row">
+              <div class="col-8">
+                @if (booking.Guest.UserName == @User.Identity.Name)
+                {
+                  <span>
+                    Your request to stay at
+                  </span>
+                }
+                else
+                {
+                  <span>
+                    @booking.Guest.UserName
+                  </span>
+                  <span>has request to stay at</span>
+                  
+                }
+                @Html.ActionLink(@booking.Home.Name, "Details", "Homes", new {id = @booking.Home.Id})
+              </div>
+              <div class="col-4" >
+                @if (booking.Status == "created" && booking.Guest.UserName != @User.Identity.Name && DateTime.Today < booking.CheckIn)
+                {
+                  <form asp-action="Accept" class="mx-2" style="float: right" method="POST">
+                    <input type="hidden" name="bookingId" value="@booking.Id"/>
+                    <button type="submit" class="btn btn-primary">Accept</button>
+                  </form>
+                }
+                @if (DateTime.Today < booking.CheckOut && booking.Status != "canceled")
+                {
+                  <form asp-action="Cancel" class="mx-2" style="float: right" method="POST">
+                    <input type="hidden" name="bookingId" value="@booking.Id"/>
+                    <button type="submit" class="btn btn-danger" onclick="confirm('Are you sure you want to cancel this booking?')">Cancel</button>
+                  </form>
+                }
+              </div>
+            </div>
+          </h4>
+          <h6>
+            @Html.DisplayFor(modelItem => booking.Home.City),
+            @Html.DisplayFor(modelItem => booking.Home.Area),
+            @Html.DisplayFor(modelItem => booking.Home.Country)
+          </h6>
+          <h5 class="mt-4">Guest: @booking.Guest.UserName</h5>
+          <div class="row" style="margin-top: 20px">
+            <div class="col-md-3">Guests</div>
+            <div class="col-md-3">Check-in</div>
+            <div class="col-md-3">Check-out</div>
+            <div class="col-md-3">Status</div>
+          </div>
+          <div class="row" style="margin-bottom: 30px; margin-top: 10px">
+            <div class="col-md-3">@booking.GuestsCount</div>
+            <div class="col-md-3">@booking.CheckIn</div>
+            <div class="col-md-3">@booking.CheckOut</div>
+            <div class="col-md-3">@booking.Status</div>
+          </div>
+          <p class="card-text" style="overflow:hidden; max-height: 125px;">@Html.DisplayFor(modelItem => booking.GuestNote)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+}

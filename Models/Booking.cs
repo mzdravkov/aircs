@@ -23,4 +23,10 @@ public class Booking
     public int GuestsCount { get; set; }
     [StringLength(200)]
     public string? GuestNote { get; set; }
+
+    public bool OverlapsWithInterval(DateTime start, DateTime end)
+    {
+        return (CheckIn < start && start < CheckOut)
+               || (CheckIn < end && end < CheckOut);
+    }
 }
