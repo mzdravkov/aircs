@@ -25,6 +25,7 @@ namespace airbnb.Controllers
             var homes = from h in _context.Home
                 .Include(h => h.Pictures)
                 .Include(h => h.Bookings)
+                .ThenInclude(b => b.Review)
                 select h;
             
             // Filter by location if provided
@@ -70,6 +71,7 @@ namespace airbnb.Controllers
                 .Include(h => h.Owner)
                 .Include(h => h.Pictures)
                 .Include(h => h.Bookings)
+                .ThenInclude(b => b.Review)
                 .Include(h => h.HomeAmenities)
                 .ThenInclude(homeAmenity => homeAmenity.Amenity)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -331,6 +333,9 @@ namespace airbnb.Controllers
             User user = _context.Users
                 .Include(u => u.Homes)
                 .ThenInclude(h => h.Pictures)
+                .Include(u => u.Homes)
+                .ThenInclude(h => h.Bookings)
+                .ThenInclude(b => b.Review)
                 .FirstOrDefault(u => u.UserName == User.Identity.Name);
             return View(nameof(Index), user.Homes.ToList());
         }

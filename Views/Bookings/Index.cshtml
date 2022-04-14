@@ -33,6 +33,16 @@
                 @Html.ActionLink(@booking.Home.Name, "Details", "Homes", new {id = @booking.Home.Id})
               </div>
               <div class="col-4" >
+                @if (booking.Status == "accepted"
+                     && booking.Guest.UserName == @User.Identity.Name
+                     && DateTime.Today > booking.CheckOut
+                     && booking.Review == null)
+                {
+                  <form asp-action="CreateReview" class="mx-2" style="float: right" method="POST">
+                    <input type="hidden" name="bookingId" value="@booking.Id"/>
+                    <button type="submit" class="btn btn-primary">Leave a review</button>
+                  </form>
+                }
                 @if (booking.Status == "created" && booking.Guest.UserName != @User.Identity.Name && DateTime.Today < booking.CheckIn)
                 {
                   <form asp-action="Accept" class="mx-2" style="float: right" method="POST">
@@ -55,7 +65,14 @@
             @Html.DisplayFor(modelItem => booking.Home.Area),
             @Html.DisplayFor(modelItem => booking.Home.Country)
           </h6>
-          <h5 class="mt-4">Guest: @booking.Guest.UserName</h5>
+          @if (booking.Guest.UserName == @User.Identity.Name)
+          {
+            <h5 class="mt-4">Host: @booking.Home.Owner.UserName</h5>
+          }
+          else
+          {
+            <h5 class="mt-4">Guest: @booking.Guest.UserName</h5>
+          }
           <div class="row" style="margin-top: 20px">
             <div class="col-md-3">Guests</div>
             <div class="col-md-3">Check-in</div>

@@ -1,0 +1,98 @@
+@model airbnb.Models.ReviewCreateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="text-align: center;">
+    <h4>Review for @Html.ActionLink(@Model.Booking.Home.Name, "Details", "Homes", new { @Model.Booking.Home.Id })</h4>
+</div>
+
+<style>
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+}
+
+.rating>input {
+    display: none
+}
+
+.rating>label {
+    position: relative;
+    width: 1em;
+    font-size: 1.5vw;
+    color: #FFD600;
+    cursor: pointer
+}
+
+.rating>label::before {
+    content: "\2605";
+    position: absolute;
+    opacity: 0
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+    opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+    opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+    opacity: 0.4
+}
+
+h1,
+p {
+    text-align: center
+}
+
+h1 {
+    margin-top: 150px
+}
+
+p {
+    font-size: 0.8rem
+}
+
+</style>
+
+<hr />
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <form asp-action="SaveReview" asp-controller="Bookings" method="POST">
+            <input asp-for="BookingId" type="hidden" value="@Model.Booking.Id"/>
+            <label asp-for="Rating" class="control-label"></label>
+            <div class="form-group mt-2">
+                <div class="rating">
+                    <input type="radio" name="rating" value="5" id="5">
+                    <label for="5">☆</label>
+                    <input type="radio" name="rating" value="4" id="4">
+                    <label for="4">☆</label>
+                    <input type="radio" name="rating" value="3" id="3">
+                    <label for="3">☆</label>
+                    <input type="radio" name="rating" value="2" id="2">
+                    <label for="2">☆</label>
+                    <input type="radio" name="rating" value="1" id="1">
+                    <label for="1">☆</label>
+                </div>
+                @* <input asp-for="Rating" class="mt-1 form-control"/> *@
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4">
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="mt-2 form-control" style="height: 350px"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div style="float: right">
+                <button class="mt-4 btn btn-primary" type="submit">Save review</button>
+            </div>
+        </form>
+    </div>
+</div>
+

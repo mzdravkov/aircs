@@ -49,4 +49,13 @@ public class Home
     public virtual ICollection<Picture> Pictures { get; set; }
     public virtual ICollection<Booking> Bookings { get; set; }
     public virtual ICollection<HomeAmenity> HomeAmenities { get; set; }
+
+    public double Rating()
+    {
+        return Bookings
+            .Where(booking => booking.Review != null)
+            .Select(booking => booking.Review.Rating)
+            .DefaultIfEmpty(0)
+            .Average();
+    }
 }

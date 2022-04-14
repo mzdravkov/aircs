@@ -23,6 +23,8 @@ public class Booking
     public int GuestsCount { get; set; }
     [StringLength(200)]
     public string? GuestNote { get; set; }
+    
+    public virtual Review? Review { get; set; }
 
     public bool OverlapsWithInterval(DateTime start, DateTime end)
     {

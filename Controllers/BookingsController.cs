@@ -93,9 +93,12 @@ public class BookingsController : Controller
         User user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
 
         var bookings = _context.Bookings
+            .Include(b => b.Review)
             .Include(b => b.Guest)
             .Include(b => b.Home)
             .ThenInclude(h => h.Pictures)
+            .Include(b => b.Home)
+            .ThenInclude(h => h.Owner)
             .Where(
                 booking => booking.Guest == user || booking.Home.Owner == user
             );
@@ -174,6 +177,88 @@ public class BookingsController : Controller
         _context.SaveChanges();
         
         _flashMessage.Confirmation("The booking has been accepted.");
+        return RedirectToAction(nameof(Index));
+    }
+    
+    // GET: Home/CreateReview
+    public async Task<IActionResult> CreateReview(int bookingId)
+    {
+        var booking = await _context.Bookings
+            .Include(b => b.Home)
+            .FirstOrDefaultAsync(m => m.Id == bookingId);
+        if (booking == null)
+        {
+            return NotFound();
+        }
+        
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            return Unauthorized();
+        }
+        
+        User user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+        if (booking.Guest != user)
+        {
+            _flashMessage.Danger("You can only change your own bookings!");
+            return RedirectToAction(nameof(Index));
+        }
+        
+        if (booking.Status != "accepted" || DateTime.Today < booking.CheckOut)
+        {
+            _flashMessage.Danger("You can only write a review on the day after check out or later.");
+            return RedirectToAction(nameof(Index));
+        }
+        
+        return View(new ReviewCreateViewModel { Booking = booking });
+    }
+    
+    [HttpPost, ActionName("SaveReview")]
+    public async Task<IActionResult> SaveReview(
+        [Bind(
+            "BookingId", "Rating", "Text")]
+        ReviewCreateViewModel reviewCreateViewModel)
+    {
+        var booking = await _context.Bookings
+            .Include(b => b.Home)
+            .FirstOrDefaultAsync(m => m.Id == reviewCreateViewModel.BookingId);
+        if (booking == null)
+        {
+            return NotFound();
+        }
+        
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            return Unauthorized();
+        }
+        
+        User user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+        if (booking.Guest != user)
+        {
+            return BadRequest("You can only leave reviews for your own bookings!");
+        }
+        
+        if (booking.Status != "accepted" || DateTime.Today < booking.CheckOut)
+        {
+            return BadRequest("You can only write a review on the day after check out or later.");
+        }
+
+        if (booking.Review != null)
+        {
+            return BadRequest("You've already left a review for this booking.");
+        }
+        
+        _context.Add(new Review
+        {
+            Guest = user,
+            Booking = booking,
+            Rating = reviewCreateViewModel.Rating,
+            Text = reviewCreateViewModel.Text
+        });
+        _context.SaveChanges();
+        
+        _flashMessage.Confirmation("Thank you for your review!");
         return RedirectToAction(nameof(Index));
     }
 }
