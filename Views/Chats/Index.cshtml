@@ -1,0 +1,30 @@
+@model IEnumerable<airbnb.Models.Chat>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (var chat in Model) {
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">
+                @if (chat.User1.UserName == User.Identity.Name)
+                {
+                    @Html.ActionLink(chat.User2.Name, "Details", "Chats", new { chat.Id })
+                }
+                else
+                {
+                    @Html.ActionLink(chat.User1.Name, "Details", "Chats", new { chat.Id })
+                }
+            </h5>
+            <h6 class="card-subtitle mt-2 mb-2 text-muted">Last message: @chat.Messages.Last().Timestamp</h6>
+            <p>@chat.Messages.Last().Text</p>
+        </div>
+    </div>
+}
+
+@if (Model.Count() == 0)
+{
+    <p>You don't have any chats yet.</p>
+}

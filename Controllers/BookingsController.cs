@@ -162,6 +162,7 @@ public class BookingsController : Controller
         
         var booking = await _context.Bookings
             .Include(b => b.Home)
+            .Include(b => b.Guest)
             .FirstOrDefaultAsync(b => b.Id == bookingId);
         
         if (booking == null)
@@ -181,6 +182,19 @@ public class BookingsController : Controller
 
         booking.Status = "accepted";
         _context.Update(booking);
+
+        var chat = new Chat {User1 = user, User2 = booking.Guest};
+        _context.Add(chat);
+
+        var message = new Message
+        {
+            Timestamp = DateTime.Now,
+            Text = user.Name + " has accepted the booking request for \"" + booking.Home.Name + "\" for the period " +
+                   booking.CheckIn.Date.ToShortDateString() + " to " + booking.CheckOut.Date.ToShortDateString() + ".",
+            Chat = chat
+        };
+        _context.Add(message);
+        
         _context.SaveChanges();
         
         _flashMessage.Confirmation("The booking has been accepted.");

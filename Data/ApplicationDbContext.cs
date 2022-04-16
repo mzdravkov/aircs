@@ -14,4 +14,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<airbnb.Models.Picture> Picture { get; set; }
     public DbSet<airbnb.Models.Booking> Bookings { get; set; }
     public DbSet<airbnb.Models.Amenity> Amenities { get; set; }
+    public DbSet<airbnb.Models.Chat> Chats { get; set; }
+    public DbSet<airbnb.Models.Message> Messages { get; set; }
 }

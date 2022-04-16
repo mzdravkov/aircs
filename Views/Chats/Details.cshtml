@@ -1,0 +1,82 @@
+@using Microsoft.DotNet.Scaffolding.Shared.Messaging
+@model airbnb.Models.Chat
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3 style="text-align: center">
+    @if (Model.User1.UserName == User.Identity.Name)
+    {
+        <span>@Model.User2.Name</span>
+    }
+    else
+    {
+        <span>@Model.User1.Name</span>
+    }
+</h3>
+
+<hr/>
+
+<div id="messages" style="height: 60vh; overflow: scroll">
+    @foreach (var message in Model.Messages)
+    {
+        <div class="row">
+            @{
+                 string messageBoxClass = "";   
+                 string messageBoxStyle = "";   
+            }
+            @if (message.Author != null)
+            {
+                messageBoxClass = "col-6";
+                if (message.Author.UserName == User.Identity.Name)
+                {
+                    messageBoxStyle = "background-color: palegreen; float: right";
+                    <div class="col-6"></div>
+                }
+                else
+                {
+                    messageBoxStyle = "background-color: lightskyblue; float: left";
+                }
+            }
+            <div class="@messageBoxClass card mt-4 mb-4" style="@messageBoxStyle">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @if (@message.Author != null)
+                        {
+                            @message.Author.Name
+                        }
+                    </h5>
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted">@Model.Messages.Last().Timestamp</h6>
+                    <p>@message.Text</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<form asp-action="CreateMessage" asp-controller="Chats" method="POST">
+    <input type="hidden" name="AuthorUserName" value="@User.Identity.Name"/>
+    <input type="hidden" name="ChatId" value="@Model.Id"/>
+    <div class="form-group mt-2">
+        <div class="row">
+            <div class="col-11">
+                <input id="Text" name="Text" class="form-control form-control-lg"/>
+            </div>
+            <div class="col-1">
+                <button type="submit" class="btn btn-primary btn-lg">Send</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            var objDiv = document.getElementById("messages");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        });
+    </script>
+}
