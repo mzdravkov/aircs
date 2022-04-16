@@ -213,7 +213,7 @@
                 {
                     <div class="card mt-4">
                         <div class="card-body">
-                            <h5 class="card-title">@booking.Review.Guest.UserName</h5>
+                            <h5 class="card-title">@booking.Review.Guest.Name</h5>
                             <h6 class="card-subtitle mb-2 text-muted">★ @booking.Review.Rating</h6>
                             <p class="card-text">@booking.Review.Text</p>
                         </div>
@@ -222,7 +222,7 @@
             }
             <hr/>
             <h4>Hosted by</h4>    
-            <p>@Html.DisplayFor(modelItem => Model.Owner.UserName)</p>
+            <p>@Html.DisplayFor(modelItem => Model.Owner.Name)</p>
         </div> 
         
         <div class="col-6" style="padding-left: 30px">

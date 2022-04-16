@@ -67,11 +67,11 @@
           </h6>
           @if (booking.Guest.UserName == @User.Identity.Name)
           {
-            <h5 class="mt-4">Host: @booking.Home.Owner.UserName</h5>
+            <h5 class="mt-4">Host: @booking.Home.Owner.Name</h5>
           }
           else
           {
-            <h5 class="mt-4">Guest: @booking.Guest.UserName</h5>
+            <h5 class="mt-4">Guest: @booking.Guest.Name</h5>
           }
           <div class="row" style="margin-top: 20px">
             <div class="col-md-3">Guests</div>

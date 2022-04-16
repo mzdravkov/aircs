@@ -2,6 +2,7 @@ using airbnb.Data;
 using airbnb.Models;
 using Microsoft.EntityFrameworkCore;
 using Vereyon.Web;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
