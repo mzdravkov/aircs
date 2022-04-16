@@ -20,6 +20,12 @@ public class BookingsController : Controller
     // GET: Home/Create
     public async Task<IActionResult> Create(int homeId, string dateRange, int guests)
     {
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            _flashMessage.Danger("You have to log in to access this page.");
+            return RedirectToAction("Details", "Homes", new { id = homeId });
+        }
+        
         var home = await _context.Home.FirstOrDefaultAsync(m => m.Id == homeId);
         if (home == null)
         {
@@ -87,7 +93,8 @@ public class BookingsController : Controller
     {
         if (User.Identity == null || !User.Identity.IsAuthenticated)
         {
-            return Unauthorized();
+            _flashMessage.Danger("You have to log in to access this page.");
+            return RedirectToAction("Index", "Homes");
         }
     
         User user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);

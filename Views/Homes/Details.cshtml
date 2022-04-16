@@ -52,26 +52,29 @@
             <h2>@Html.DisplayFor(i => Model.Name)</h2>
         </div>
         <div class="col-4">
-            <h6>
-                @Html.ActionLink(
-                    "Remove",
-                    "Delete",
-                    "Homes",
-                    new {id = @Model.Id},
-                    new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
-                @Html.ActionLink(
-                    "Edit",
-                    "Edit",
-                    "Homes",
-                    new {id = @Model.Id},
-                    new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
-                @Html.ActionLink(
-                    "Add pictures",
-                    "AddPictures",
-                    "Homes",
-                    new {id = @Model.Id},
-                    new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
-            </h6>
+            @if (Model.Owner.UserName == User.Identity.Name)
+            {
+                <h6>
+                    @Html.ActionLink(
+                        "Remove",
+                        "Delete",
+                        "Homes",
+                        new {id = @Model.Id},
+                        new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
+                    @Html.ActionLink(
+                        "Edit",
+                        "Edit",
+                        "Homes",
+                        new {id = @Model.Id},
+                        new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
+                    @Html.ActionLink(
+                        "Add pictures",
+                        "AddPictures",
+                        "Homes",
+                        new {id = @Model.Id},
+                        new {@style = "float: right; text-decoration: none; color: black; margin-left: 10px"})
+                </h6>
+            }
         </div>
     </div>
     <h6>
@@ -203,6 +206,20 @@
             </div>
             <hr/>
             <h4>Reviews</h4>    
+            
+            @foreach (var booking in Model.Bookings.TakeLast(5).Reverse())
+            {
+                if (booking.Review != null)
+                {
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title">@booking.Review.Guest.UserName</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">★ @booking.Review.Rating</h6>
+                            <p class="card-text">@booking.Review.Text</p>
+                        </div>
+                    </div>
+                }
+            }
             <hr/>
             <h4>Hosted by</h4>    
             <p>@Html.DisplayFor(modelItem => Model.Owner.UserName)</p>

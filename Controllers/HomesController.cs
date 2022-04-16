@@ -1,5 +1,4 @@
 #nullable disable
-using System.Collections.Specialized;
 using airbnb.Data;
 using airbnb.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -72,6 +71,7 @@ namespace airbnb.Controllers
                 .Include(h => h.Pictures)
                 .Include(h => h.Bookings)
                 .ThenInclude(b => b.Review)
+                .ThenInclude(r => r.Guest)
                 .Include(h => h.HomeAmenities)
                 .ThenInclude(homeAmenity => homeAmenity.Amenity)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -86,6 +86,12 @@ namespace airbnb.Controllers
         // GET: Home/Create
         public IActionResult Create()
         {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                _flashMessage.Danger("You have to log in to access this page.");
+                return RedirectToAction("Index", "Homes");
+            }
+            
             return View();
         }
 
@@ -330,6 +336,12 @@ namespace airbnb.Controllers
 
         public async Task<IActionResult> UserHomes()
         {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                _flashMessage.Danger("You have to log in to access this page.");
+                return RedirectToAction(nameof(Index));
+            }
+            
             User user = _context.Users
                 .Include(u => u.Homes)
                 .ThenInclude(h => h.Pictures)
