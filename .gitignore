@@ -78,3 +78,5 @@ _[Ss]cripts
 *.swp
 wwwroot/images/*.jpg
 wwwroot/images/*.png
+
+.DS_Store
