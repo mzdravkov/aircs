@@ -1,6 +1,6 @@
 # aircs
 
-A simple copy of AirBNB implemented in PHP for a project at New Bulgarian University.
+A simple copy of AirBNB implemented in C# and APS.NET for a project at New Bulgarian University.
 
 
 ## Run
