@@ -21,7 +21,7 @@
               @Html.DisplayFor(modelItem => home.Area),
               @Html.DisplayFor(modelItem => home.Country)
             </h6>
-            <h6>★ @home.Rating()</h6>
+            <h6>★ @home.Rating().ToString("0.00")</h6>
             <div class="row" style="margin-bottom: 30px; margin-top: 20px">
               <div class="col-md-3">Guests: @home.GuestLimit</div>
               <div class="col-md-3">Type: @home.Type</div>
