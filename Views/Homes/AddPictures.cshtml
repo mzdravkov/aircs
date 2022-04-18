@@ -6,14 +6,13 @@
 }
 
 <div>
-    <h2>Basic File Upload</h2>
+    <h2>Add image</h2>
     @using (Html.BeginForm("UploadPicture",
         "Homes",
         FormMethod.Post,
         new {enctype = "multipart/form-data"}))
 {
         <input type="hidden" name="id" id="id" value="@Model.Id"/>
-        <label for="file">Upload Image:</label>
         <input type="file" name="file" id="file"/>
     <br><br>
     <input type="submit" value="Upload Image"/>

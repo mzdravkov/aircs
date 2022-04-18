@@ -4,6 +4,7 @@ namespace airbnb.Models;
 
 public class BookingCreateViewModel
 {
+    [Display(Name = "Period")]
     public string DateRange { get; set; }
     
     [Range(1, Int32.MaxValue)]
@@ -11,6 +12,7 @@ public class BookingCreateViewModel
     
     public Home? Home { get; set; }
     
+    [Display(Name = "Note")]
     [StringLength(200)]
     public string? GuestNote { get; set; }
     

@@ -183,8 +183,15 @@ public class BookingsController : Controller
         booking.Status = "accepted";
         _context.Update(booking);
 
-        var chat = new Chat {User1 = user, User2 = booking.Guest};
-        _context.Add(chat);
+        var chat = _context.Chats
+            .Include(c => c.User1)
+            .Include(c => c.User2)
+            .FirstOrDefault(c => (c.User1 == user && c.User2 == booking.Guest) || (c.User1 == booking.Guest && c.User2 == user));
+        if (chat == null)
+        {
+            chat = new Chat {User1 = user, User2 = booking.Guest};
+            _context.Add(chat);
+        }
 
         var message = new Message
         {

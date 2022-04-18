@@ -32,7 +32,11 @@ public class ChatsController : Controller
                 .Where(c => c.User1.UserName == User.Identity.Name || c.User2.UserName == User.Identity.Name)
                 .Include(c => c.Messages)
             select c;
-        return View(chats);
+        var orderedChats = chats
+            .ToList()
+            .OrderBy(chat => chat.Messages.MaxBy(m => m.Timestamp).Timestamp)
+            .Reverse();
+        return View(orderedChats);
     }
 
     public async Task<IActionResult> Details(int id)
