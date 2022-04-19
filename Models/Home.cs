@@ -46,9 +46,9 @@ public class Home
     public int Beds { get; set; }
     [Range(0, Int32.MaxValue)]
     public int Baths { get; set; }
-    public virtual ICollection<Picture> Pictures { get; set; }
-    public virtual ICollection<Booking> Bookings { get; set; }
-    public virtual ICollection<HomeAmenity> HomeAmenities { get; set; }
+    public virtual ICollection<Picture>? Pictures { get; set; }
+    public virtual ICollection<Booking>? Bookings { get; set; }
+    public virtual ICollection<HomeAmenity>? HomeAmenities { get; set; }
 
     public double Rating()
     {

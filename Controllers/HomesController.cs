@@ -100,7 +100,7 @@ namespace airbnb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "Id,Name,Country,Area,City,Street,Number,Apartment,Description,CheckInInstructions,Type,GuestLimit,Bedrooms,Beds,Baths")]
+                "Id,Name,Country,Area,City,Street,Number,Apartment,Description,CheckInInstructions,Type,GuestLimit,Bedrooms,Beds,Baths,Pictures,Bookings,HomeAmenities")]
             Home home)
         {
             if (User.Identity == null || !User.Identity.IsAuthenticated)
